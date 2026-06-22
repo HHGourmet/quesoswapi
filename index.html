@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quesería Artesanal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F2E8;
+      --warm-white: #FDFAF4;
+      --ochre: #C8922A;
+      --ochre-dark: #A07318;
+      --brown: #3D2B1F;
+      --brown-light: #6B4C38;
+      --gray: #8C7B6E;
+      --border: #E2D8C8;
+      --shadow: 0 2px 16px rgba(61,43,31,0.10);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--brown);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--brown);
+      color: var(--cream);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(61,43,31,0.18);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .logo span {
+      color: var(--ochre);
+    }
+
+    .cart-btn {
+      background: var(--ochre);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .cart-btn:hover { background: var(--ochre-dark); }
+
+    .cart-count {
+      background: #fff;
+      color: var(--ochre-dark);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--brown);
+      color: var(--cream);
+      text-align: center;
+      padding: 4rem 2rem 3.5rem;
+      border-bottom: 3px solid var(--ochre);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 em {
+      color: var(--ochre);
+      font-style: normal;
+    }
+
+    .hero p {
+      color: #C4B89A;
+      font-size: 1.05rem;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* LAYOUT */
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .main { grid-template-columns: 1fr; }
+      .cart-panel { order: -1; }
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--brown);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--ochre);
+      display: inline-block;
+    }
+
+    /* PRODUCTS GRID */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .product-card {
+      background: var(--warm-white);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(61,43,31,0.14);
+    }
+
+    .product-emoji {
+      font-size: 3.5rem;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 110px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product-info {
+      padding: 1rem;
+    }
+
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 0.25rem;
+    }
+
+    .product-desc {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ochre-dark);
+    }
+
+    .add-btn {
+      background: var(--ochre);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .add-btn:hover { background: var(--ochre-dark); }
+    .add-btn:active { transform: scale(0.96); }
+
+    /* CART PANEL */
+    .cart-panel {
+      background: var(--warm-white);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      position: sticky;
+      top: 84px;
+    }
+
+    .cart-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--brown);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cart-empty {
+      color: var(--gray);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .cart-items {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+    }
+
+    .cart-item:last-child { border-bottom: none; }
+
+    .cart-item-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--brown);
+      flex: 1;
+    }
+
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .qty-btn {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--brown);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .qty-btn:hover { background: var(--border); }
+
+    .qty-num {
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .cart-item-price {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ochre-dark);
+      min-width: 70px;
+      text-align: right;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #C0A898;
+      font-size: 1rem;
+      padding: 0 0.2rem;
+      transition: color 0.15s;
+    }
+
+    .remove-btn:hover { color: #B03030; }
+
+    .cart-divider {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 0.75rem 0;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .cart-total-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+    }
+
+    .cart-total-amount {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--ochre-dark);
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: var(--brown);
+      color: var(--cream);
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .checkout-btn:hover { background: var(--brown-light); }
+
+    .clear-btn {
+      width: 100%;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--gray);
+      cursor: pointer;
+      margin-top: 0.6rem;
+      transition: border-color 0.2s, color 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .clear-btn:hover { border-color: #B03030; color: #B03030; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--brown);
+      color: var(--cream);
+      padding: 0.7rem 1.4rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+      opacity: 0;
+      z-index: 999;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--gray);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Quese<span>ría</span> Artesanal</div>
+  <button class="cart-btn" onclick="scrollToCart()">
+    🧺 Carrito
+    <span class="cart-count" id="cart-count">0</span>
+  </button>
+</header>
+
+<div class="hero">
+  <h1>Quesos que <em>se notan</em></h1>
+  <p>Elaborados con leche fresca, madurados a tiempo. Sin apuros, sin atajos.</p>
+</div>
+
+<div class="main">
+
+  <!-- PRODUCTOS -->
+  <div class="products-section">
+    <div class="section-title">Nuestros quesos</div>
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+
+  <!-- CARRITO -->
+  <div class="cart-panel" id="cart-panel">
+    <div class="cart-title">🧺 Tu pedido</div>
+    <div id="cart-content">
+      <div class="cart-empty">Todavía no agregaste nada.<br>¡Elegí tus quesos!</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  Quesería Artesanal · Pedidos por WhatsApp · Envíos a domicilio
+</footer>
+
+<script>
+  const PRODUCTS = [
+    { id: 1, name: "Cremoso", emoji: "🧀", desc: "Suave, untuoso y fresco. Ideal para untar o derretir.", price: 1800 },
+    { id: 2, name: "Barra", emoji: "🟡", desc: "Clásico de la heladera argentina. Firme y levemente salado.", price: 2200 },
+    { id: 3, name: "Provolone", emoji: "🫕", desc: "Madurado lentamente. Perfecto a la parrilla.", price: 2800 },
+    { id: 4, name: "Queso de campo", emoji: "🌾", desc: "Corteza natural, pasta firme. Tradición de estancia.", price: 3200 },
+    { id: 5, name: "Untable c/ hierbas", emoji: "🌿", desc: "Cremoso con albahaca, orégano y ajo. Para picar.", price: 1500 },
+    { id: 6, name: "Reggianito", emoji: "🏺", desc: "Duro y granulado. Para rallar o comer en cubos.", price: 3500 },
+    { id: 7, name: "Mozzarella", emoji: "🫧", desc: "Fresca, elástica. Hecha el mismo día.", price: 2000 },
+    { id: 8, name: "Azul", emoji: "💙", desc: "Intenso y cremoso. Para los que saben lo que quieren.", price: 3800 },
+  ];
+
+  let cart = {};
+
+  function formatPrice(n) {
+    return "$" + n.toLocaleString("es-AR");
+  }
+
+  function renderProducts() {
+    const grid = document.getElementById("products-grid");
+    grid.innerHTML = PRODUCTS.map(p => `
+      <div class="product-card">
+        <div class="product-emoji">${p.emoji}</div>
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-desc">${p.desc}</div>
+          <div class="product-footer">
+            <span class="product-price">${formatPrice(p.price)}</span>
+            <button class="add-btn" onclick="addToCart(${p.id})">+ Agregar</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function addToCart(id) {
+    const product = PRODUCTS.find(p => p.id === id);
+    if (!product) return;
+    if (cart[id]) {
+      cart[id].qty++;
+    } else {
+      cart[id] = { ...product, qty: 1 };
+    }
+    renderCart();
+    showToast(`✓ ${product.name} agregado`);
+  }
+
+  function changeQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id].qty += delta;
+    if (cart[id].qty <= 0) delete cart[id];
+    renderCart();
+  }
+
+  function removeItem(id) {
+    delete cart[id];
+    renderCart();
+  }
+
+  function clearCart() {
+    cart = {};
+    renderCart();
+  }
+
+  function renderCart() {
+    const items = Object.values(cart);
+    const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const count = items.reduce((s, i) => s + i.qty, 0);
+
+    document.getElementById("cart-count").textContent = count;
+
+    const content = document.getElementById("cart-content");
+
+    if (items.length === 0) {
+      content.innerHTML = `<div class="cart-empty">Todavía no agregaste nada.<br>¡Elegí tus quesos!</div>`;
+      return;
+    }
+
+    content.innerHTML = `
+      <ul class="cart-items">
+        ${items.map(i => `
+          <li class="cart-item">
+            <span class="cart-item-name">${i.emoji} ${i.name}</span>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty(${i.id}, -1)">−</button>
+              <span class="qty-num">${i.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${i.id}, 1)">+</button>
+            </div>
+            <span class="cart-item-price">${formatPrice(i.price * i.qty)}</span>
+            <button class="remove-btn" onclick="removeItem(${i.id})" title="Quitar">✕</button>
+          </li>
+        `).join("")}
+      </ul>
+      <hr class="cart-divider"/>
+      <div class="cart-total">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-amount">${formatPrice(total)}</span>
+      </div>
+      <button class="checkout-btn" onclick="checkout()">Hacer pedido por WhatsApp</button>
+      <button class="clear-btn" onclick="clearCart()">Vaciar carrito</button>
+    `;
+  }
+
+  function checkout() {
+    const items = Object.values(cart);
+    if (items.length === 0) return;
+    const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const lines = items.map(i => `• ${i.name} x${i.qty} = ${formatPrice(i.price * i.qty)}`).join("\n");
+    const msg = encodeURIComponent(`¡Hola! Quiero hacer el siguiente pedido:\n\n${lines}\n\n*Total: ${formatPrice(total)}*`);
+    window.open(`https://wa.me/?text=${msg}`, "_blank");
+  }
+
+  function scrollToCart() {
+    document.getElementById("cart-panel").scrollIntoView({ behavior: "smooth" });
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  renderProducts();
+  renderCart();
+</script>
+</body>
+</html>
